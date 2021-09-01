@@ -6,15 +6,19 @@ public class Player_Movment : MonoBehaviour
 {
     //public CharacterController controller;
     public float speed = 12f;
-    public float gravity = -9.8f;
+    private float gravity = -9.8f;
     public Transform groundCheck;
+    public Transform groundCheckTop;
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
-    public float jumpHieght = 3f;
+    private float jumpHieght = 8f;
     Vector3 velocity;
     bool isGrounded;
     public GameObject player;
     private bool playerNum;
+    private float pullforce = -2f;
+    //private bool wait = true;
+    private bool gravityChange = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,8 +35,10 @@ public class Player_Movment : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);       
+        if(gravityChange)
+            isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        else
+            isGrounded = Physics.CheckSphere(groundCheckTop.position, groundDistance, groundMask);
 
         if (playerNum)
         {
@@ -50,7 +56,10 @@ public class Player_Movment : MonoBehaviour
 
             if (Input.GetKey("w") && isGrounded)
             {
-                velocity.y = Mathf.Sqrt(jumpHieght * -2f * gravity);
+                float num = Mathf.Sqrt(Mathf.Abs(jumpHieght * pullforce * gravity));
+                if (!gravityChange)
+                    num = -1 * num;
+                velocity.y =num;
                 player.transform.Translate(velocity * Time.deltaTime);
             }
         }
@@ -70,14 +79,33 @@ public class Player_Movment : MonoBehaviour
 
             if (Input.GetKey("up") && isGrounded)
             {
-                velocity.y = Mathf.Sqrt(jumpHieght * -2f * gravity);
+                float num = Mathf.Sqrt(Mathf.Abs(jumpHieght * pullforce * gravity));
+                if (!gravityChange)
+                    num = -1 * num;
+                velocity.y = num;
                 player.transform.Translate(velocity * Time.deltaTime);
             }
         }
 
-        if (isGrounded && velocity.y < 0)
+        //if(Input.GetKey("space") && wait)
+        //{
+        //    Physics.gravity = new Vector3(0, -1*gravity, 0);
+        //    gravity = -1 * gravity;
+        //    pullforce = -1 * pullforce;
+        //    jumpHieght = -1 * jumpHieght;
+        //    groundCheck.gameObject.SetActive(false);
+        //    groundCheckTop.gameObject.SetActive(true);
+        //    gravityChange = !gravityChange;
+        //    StartCoroutine(Waiting());
+        //}
+
+        if (isGrounded && velocity.y < 0 && gravityChange)
         {
-            velocity.y = -2f;
+            velocity.y = pullforce;
+        }
+        else if (isGrounded && velocity.y > 0 && !gravityChange)
+        {
+            velocity.y = pullforce;
         }
         else if(!isGrounded)
         {
@@ -85,5 +113,33 @@ public class Player_Movment : MonoBehaviour
             player.transform.Translate(velocity * Time.deltaTime);
         }
         
+    }
+
+    //IEnumerator Waiting()
+    //{
+    //    wait = false;
+    //    yield return new WaitForSeconds(0.5f);
+    //    wait = true;
+    //}
+
+    public void changeGravity()
+    {
+        Physics.gravity = new Vector3(0, -1 * gravity, 0);
+        gravity = -1 * gravity;
+        pullforce = -1 * pullforce;
+        jumpHieght = -1 * jumpHieght;
+        groundCheck.gameObject.SetActive(false);
+        groundCheckTop.gameObject.SetActive(true);
+        gravityChange = !gravityChange;
+    }
+
+    public void changeattribute()
+    {
+        gravity = -1 * gravity;
+        pullforce = -1 * pullforce;
+        jumpHieght = -1 * jumpHieght;
+        groundCheck.gameObject.SetActive(false);
+        groundCheckTop.gameObject.SetActive(true);
+        gravityChange = !gravityChange;
     }
 }
