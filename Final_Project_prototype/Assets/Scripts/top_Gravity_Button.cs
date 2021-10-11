@@ -7,7 +7,7 @@ public class top_Gravity_Button : MonoBehaviour
 
     public GameObject Player1;
     public GameObject Player2;
-    public GameObject[] buttons;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,12 +20,7 @@ public class top_Gravity_Button : MonoBehaviour
         {
             Player1.GetComponent<Player_Movment>().changeGravity();
             Player2.GetComponent<Player_Movment>().changeattribute();
-            for (int i = 0; i < buttons.Length; i++)
-            {
-                buttons[i].SetActive(true);
-            }
-            buttons[0].GetComponent<Press_Button>().isactive = true;
-            this.gameObject.SetActive(false);
+            //this.gameObject.SetActive(false);
         }
     }
 

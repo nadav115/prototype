@@ -19,7 +19,7 @@ public class Gravity_Button : MonoBehaviour
         {
             Player1.GetComponent<Player_Movment>().changeGravity();
             Player2.GetComponent<Player_Movment>().changeattribute();
-            this.gameObject.SetActive(false);
+            //this.gameObject.SetActive(false);
         }
     }
 
