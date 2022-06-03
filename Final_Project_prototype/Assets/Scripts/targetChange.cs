@@ -15,12 +15,18 @@ public class targetChange : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.name == enemy.name)
+        if(other.gameObject.name == enemy.name && enemy.GetComponent<EnemyController>().currentTarget.name != "Player 1" && enemy.GetComponent<EnemyController>().currentTarget.name != "Player 2")
         {
-            if(enemy.name == "SimpleEnemy")
+            if(enemy.name == "SimpleEnemy" || enemy.name == "SimpleEnemy2")
                 enemy.GetComponent<EnemyController>().currentTarget = otherTarget;
             else
-                enemy.GetComponent<bossMovement>().currentTarget = otherTarget;
+            {
+                if(enemy.name == "BOSS")
+                    enemy.GetComponent<bossMovement>().currentTarget = otherTarget;
+                else
+                    enemy.GetComponent<L2BossMovement>().currentTarget = otherTarget;
+            }
+                
         }
     }
 

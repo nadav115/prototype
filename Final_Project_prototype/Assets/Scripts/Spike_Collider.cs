@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Spike_Collider : MonoBehaviour
 {
@@ -18,7 +19,17 @@ public class Spike_Collider : MonoBehaviour
         {
             Destroy(player1);
             Destroy(player2);
+            StartCoroutine(lose());
         }
+    }
+
+    IEnumerator lose()
+    {
+        yield return new WaitForSeconds(2);
+        if(SceneManager.GetActiveScene().name == "Level 1")
+            SceneManager.LoadScene("Level 1");
+        else
+            SceneManager.LoadScene("Level 2");
     }
     // Update is called once per frame
     void Update()

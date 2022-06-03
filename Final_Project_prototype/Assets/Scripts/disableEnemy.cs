@@ -9,6 +9,7 @@ public class disableEnemy : MonoBehaviour
     public GameObject enemy;
     public GameObject cube;
     public GameObject button;
+    public Animator anim;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,10 +20,13 @@ public class disableEnemy : MonoBehaviour
     {
         if(collision.gameObject.name == enemy.name)
         {
+            enemy.GetComponent<EnemyController>().alive = false;
             enemy.GetComponent<EnemyController>().enabled = false;
             enemy.GetComponent<NavMeshAgent>().enabled = false;
             cube.GetComponent<BoxCollider>().isTrigger = true;
+            anim.SetInteger("passed", 1);
             button.SetActive(true);
+            
         }
         else
         {

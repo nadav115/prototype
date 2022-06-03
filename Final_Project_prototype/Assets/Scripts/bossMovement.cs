@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class bossMovement : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class bossMovement : MonoBehaviour
     public GameObject target1;
     public GameObject target2;
     public GameObject gameStarter;
-    private bool changed;
+    private bool changed, alive;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +29,7 @@ public class bossMovement : MonoBehaviour
         agent.updateRotation = false;
         speed = 3f;
         changed = true;
+        alive = true;
         life = 3;
     }
 
@@ -47,6 +49,19 @@ public class bossMovement : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (alive)
+        {
+            if (collision.gameObject == player1 || collision.gameObject == player2)
+            {
+                Destroy(player1);
+                Destroy(player2);
+                StartCoroutine(lose());
+            }
+        }        
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -59,6 +74,7 @@ public class bossMovement : MonoBehaviour
 
         if(life == 0)
         {
+            alive = false;
             this.GetComponent<NavMeshAgent>().enabled = false;
             this.GetComponent<bossMovement>().enabled = false;
             this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
@@ -77,5 +93,14 @@ public class bossMovement : MonoBehaviour
         Vector3 direction = (destination - transform.position).normalized;
         Quaternion qDir = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, qDir, Time.deltaTime * rotSpeed);
+    }
+
+    IEnumerator lose()
+    {
+        yield return new WaitForSeconds(2);
+        if (SceneManager.GetActiveScene().name == "Level 1")
+            SceneManager.LoadScene("Level 1");
+        else
+            SceneManager.LoadScene("Level 2");
     }
 }

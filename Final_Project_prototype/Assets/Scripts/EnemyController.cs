@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class EnemyController : MonoBehaviour
 {
@@ -10,8 +11,7 @@ public class EnemyController : MonoBehaviour
     public float speed;
     public float forceMulti;
     private Rigidbody rb;
-    private Quaternion quaternion;
-    private bool changed;
+    public bool changed,alive;
     private NavMeshAgent agent;
     private const float rotSpeed = 50f;
     public GameObject player1;
@@ -31,7 +31,7 @@ public class EnemyController : MonoBehaviour
         forceMulti = 5f;
         changedTarget = currentTarget;
         changed = false;
-        //rb.velocity = currentTarget.transform.position * forceMulti * Time.deltaTime;
+        alive = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -39,45 +39,34 @@ public class EnemyController : MonoBehaviour
         if(other.gameObject == player1 || other.gameObject == player2)
         {
             currentTarget = other.gameObject;
-            target1.SetActive(false);
-            target2.SetActive(false);
+            
         }
     }
 
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.gameObject == player1 || collision.gameObject == player2)
-    //    {
-    //        Destroy(player1);
-    //        Destroy(player2);
-    //    }
-    //}
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (alive)
+        {
+            if (collision.gameObject == player1 || collision.gameObject == player2)
+            {
+                Destroy(player1);
+                Destroy(player2);
+                StartCoroutine(lose());
+            }
+        }
+        
+    }
 
     // Update is called once per frame
     void Update()
     {
         if (agent.enabled)
         {
-            agent.SetDestination(currentTarget.transform.position); // the enemy doesnt respond to gravity changes
+            agent.SetDestination(currentTarget.transform.position); 
             InstantlyTurn(agent.destination);
             transform.position += transform.forward * Time.deltaTime * speed;
         }
-        //Vector3 currentPos = transform.position;
-        //Vector3 targetPos = currentTarget.transform.position;
-        //transform.position = Vector3.MoveTowards(currentPos, new Vector3(targetPos.x, currentPos., targetPos.z), speed * Time.deltaTime);
-        //if (!changed)
-        //{
-        //    transform.LookAt(currentTarget.transform);
-        //    //transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, 0, transform.rotation.eulerAngles.z);
-        //    changed = !changed;
-        //}
-        //if (currentTarget != changedTarget)
-        //{
-        //    changedTarget = currentTarget;
-        //    changed = !changed;
-        //}
 
-        //transform.position += transform.forward * Time.deltaTime * speed;
 
 
     }
@@ -91,6 +80,15 @@ public class EnemyController : MonoBehaviour
         Vector3 direction = (destination - transform.position).normalized;
         Quaternion qDir = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, qDir, Time.deltaTime * rotSpeed);
+    }
+
+    IEnumerator lose()
+    {
+        yield return new WaitForSeconds(2);
+        if (SceneManager.GetActiveScene().name == "Level 1")
+            SceneManager.LoadScene("Level 1");
+        else
+            SceneManager.LoadScene("Level 2");
     }
 
 }

@@ -25,7 +25,11 @@ public class movingDoor : MonoBehaviour
         {
             counter++;
             if (counter == 2)
-                anim.SetInteger("passed", 1);
+            {
+                anim.SetInteger("passed", 2);
+                this.enabled= false;
+            }
+                
                 
         }
     }
