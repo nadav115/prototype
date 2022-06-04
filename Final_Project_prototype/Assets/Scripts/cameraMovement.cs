@@ -37,11 +37,7 @@ public class cameraMovement : MonoBehaviour
         cameraDestination.y = savedpos.y;
 
         //// Adjust ortho size if we're using one of those
-        //if (cam.orthographic)
-        //{
-        //    // The camera's forward vector is irrelevant, only this size will matter
-        //    cam.orthographicSize = distance;
-        //}
+        
         // You specified to use MoveTowards instead of Slerp
         cam.transform.position = Vector3.Slerp(cam.transform.position, cameraDestination, followTimeDelta);
 

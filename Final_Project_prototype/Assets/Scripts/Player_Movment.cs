@@ -17,7 +17,6 @@ public class Player_Movment : MonoBehaviour
     public GameObject player;
     private bool playerNum;
     private float pullforce = -2f;
-    //private bool wait = true;
     private bool gravityChange = true;
     // Start is called before the first frame update
     void Start()
@@ -87,17 +86,6 @@ public class Player_Movment : MonoBehaviour
             }
         }
 
-        //if(Input.GetKey("space") && wait)
-        //{
-        //    Physics.gravity = new Vector3(0, -1*gravity, 0);
-        //    gravity = -1 * gravity;
-        //    pullforce = -1 * pullforce;
-        //    jumpHieght = -1 * jumpHieght;
-        //    groundCheck.gameObject.SetActive(false);
-        //    groundCheckTop.gameObject.SetActive(true);
-        //    gravityChange = !gravityChange;
-        //    StartCoroutine(Waiting());
-        //}
 
         if (isGrounded && velocity.y < 0 && gravityChange)
         {
@@ -115,12 +103,6 @@ public class Player_Movment : MonoBehaviour
         
     }
 
-    //IEnumerator Waiting()
-    //{
-    //    wait = false;
-    //    yield return new WaitForSeconds(0.5f);
-    //    wait = true;
-    //}
 
     public void changeGravity()
     {

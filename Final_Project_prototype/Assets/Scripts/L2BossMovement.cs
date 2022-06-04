@@ -112,6 +112,7 @@ public class L2BossMovement : MonoBehaviour
     IEnumerator lose()
     {
         yield return new WaitForSeconds(2);
+        Physics.gravity = new Vector3(0, -9.8f, 0);
         if (SceneManager.GetActiveScene().name == "Level 1")
             SceneManager.LoadScene("Level 1");
         else

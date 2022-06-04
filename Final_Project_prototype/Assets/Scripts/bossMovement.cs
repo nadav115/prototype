@@ -7,12 +7,7 @@ using UnityEngine.SceneManagement;
 public class bossMovement : MonoBehaviour
 {
     public GameObject currentTarget;
-    //private GameObject changedTarget;
-    public float speed, life;
-    //public float forceMulti;
-    //private Rigidbody rb;
-    //private Quaternion quaternion;
-    //private bool changed;
+    public float speed, life;    
     private NavMeshAgent agent;
     private const float rotSpeed = 50f;
     public GameObject player1;
@@ -75,6 +70,7 @@ public class bossMovement : MonoBehaviour
         if(life == 0)
         {
             alive = false;
+            StartCoroutine(level2());
             this.GetComponent<NavMeshAgent>().enabled = false;
             this.GetComponent<bossMovement>().enabled = false;
             this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
@@ -98,9 +94,17 @@ public class bossMovement : MonoBehaviour
     IEnumerator lose()
     {
         yield return new WaitForSeconds(2);
+        Physics.gravity = new Vector3(0, -9.8f, 0);
         if (SceneManager.GetActiveScene().name == "Level 1")
             SceneManager.LoadScene("Level 1");
         else
             SceneManager.LoadScene("Level 2");
+    }
+
+    IEnumerator level2()
+    {
+        yield return new WaitForSeconds(2);
+        Physics.gravity = new Vector3(0, -9.8f, 0);        
+        SceneManager.LoadScene("Level 2");
     }
 }
